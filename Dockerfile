@@ -21,3 +21,8 @@ RUN curl -Lso /tmp/consul-template.zip https://releases.hashicorp.com/consul-tem
     rm -f /tmp/consul-template.zip
 ADD etc/consul.d/agent.json /etc/consul.d/
 ADD etc/supervisord.d/consul.ini /etc/supervisord.d/
+ADD opt/qnib/consul/bin/start.sh /opt/qnib/consul/bin/
+ADD opt/qnib/consul/etc/bash_functions.sh /opt/qnib/consul/etc/
+RUN echo "consul members" >> /root/.bash_history
+
+
