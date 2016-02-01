@@ -31,7 +31,7 @@ if [ "X${NO_CONSUL}" != "X" ];then
     exit 0
 fi
 
-sed -i -e "s#\"node_name\":.*#\"node_name\": \"${NODE_NAME}\",#" /etc/consul.json
+sed -i -e "s#\"node_name\":.*#\"node_name\": \"${NODE_NAME}\",#" /etc/consul.d/agent.json
 
 if [ "x${FORWARD_TO_LOGSTASH}" == "xtrue" ];then
     sed -i '' -e 's/^stdout_events_enabled.*/stdout_events_enabled = true/' /etc/supervisord.d/consul.ini
@@ -65,16 +65,16 @@ if [ "X${ADDV_ADDR}" != "X" ];then
     if [ "X${ADDV_ADDR}" == "XSERVER" ];then
         ADDV_ADDR=$(cat /host_info/ip_eth0)
     fi
-    sed -i -e "s#\"advertise_addr\":.*#\"advertise_addr\": \"${ADDV_ADDR}\",#" /etc/consul.json
+    sed -i -e "s#\"advertise_addr\":.*#\"advertise_addr\": \"${ADDV_ADDR}\",#" /etc/consul.d/agent.json
 else
-    sed -i -e "s#\"advertise_addr\":.*#\"advertise_addr\": \"${IPv4}\",#" /etc/consul.json
+    sed -i -e "s#\"advertise_addr\":.*#\"advertise_addr\": \"${IPv4}\",#" /etc/consul.d/agent.json
 fi
 ### Addvertise address wan
 if [ "X${CONSUL_ADDV_ADDR_WAN}" != "X" ];then
-    sed -i -e "s#\"advertise_addr_wan\":.*#\"advertise_addr_wan\": \"${CONSUL_ADDV_ADDR_WAN}\",#" /etc/consul.json
+    sed -i -e "s#\"advertise_addr_wan\":.*#\"advertise_addr_wan\": \"${CONSUL_ADDV_ADDR_WAN}\",#" /etc/consul.d/agent.json
 fi
 if [ "X${DC_NAME}" != "X" ];then
-    sed -i -e "s#\"datacenter\":.*#\"datacenter\": \"${DC_NAME}\",#" /etc/consul.json
+    sed -i -e "s#\"datacenter\":.*#\"datacenter\": \"${DC_NAME}\",#" /etc/consul.d/agent.json
 fi
 if [ ! -z "${CONSUL_CLUSTER_IPS}" ];then
     START_JOIN=""
@@ -97,7 +97,7 @@ if [ ! -z "${CONSUL_CLUSTER_IPS}" ];then
     elif [ "X${START_JOIN}" == "X" ] && [ "X${CONSUL_BOOTSTRAP_SOLO}" == "Xtrue" ];then
         BOOTSTRAP_CONSUL=true
     else
-        sed -i -e "s#\"start_join\":.*#\"start_join\": [\"${START_JOIN}\"],#" /etc/consul.json
+        sed -i -e "s#\"start_join\":.*#\"start_join\": [\"${START_JOIN}\"],#" /etc/consul.d/agent.json
     fi
 fi
 
@@ -108,25 +108,25 @@ if [ "X${WAN_SERVER}" != "X" ];then
 fi
 
 if [ "X${BOOTSTRAP_CONSUL}" == "Xtrue" ];then
-    sed -i -e "s#\"bootstrap\":.*#\"bootstrap\": true,#" /etc/consul.json
+    sed -i -e "s#\"bootstrap\":.*#\"bootstrap\": true,#" /etc/consul.d/agent.json
     RUN_SERVER=true
 elif [ "X${CONSUL_BOOTSTRAP}" == "Xtrue" ];then
-    sed -i -e "s#\"bootstrap\":.*#\"bootstrap\": true,#" /etc/consul.json
+    sed -i -e "s#\"bootstrap\":.*#\"bootstrap\": true,#" /etc/consul.d/agent.json
     RUN_SERVER=true
 elif [ "X${CONSUL_BOOTSTRAP_EXPECT}" != "X" ];then
-    sed -i -e "s#\"bootstrap\":.*#\"bootstrap_expect\": ${CONSUL_BOOTSTRAP_EXPECT},#" /etc/consul.json
+    sed -i -e "s#\"bootstrap\":.*#\"bootstrap_expect\": ${CONSUL_BOOTSTRAP_EXPECT},#" /etc/consul.d/agent.json
     RUN_SERVER=true
 fi
 if [ "X${RUN_SERVER}" == "Xtrue" ];then
-    sed -i -e "s#\"server\":.*#\"server\": true,#" /etc/consul.json
+    sed -i -e "s#\"server\":.*#\"server\": true,#" /etc/consul.d/agent.json
 fi
 if [ "X${DNS_RECURSOR}" != "X" ];then
-    sed -i -e "s#\"recursor\":.*#\"recursor\": \"${DNS_RECURSOR}\",#" /etc/consul.json
+    sed -i -e "s#\"recursor\":.*#\"recursor\": \"${DNS_RECURSOR}\",#" /etc/consul.d/agent.json
 fi
 
 mkdir -p /etc/consul.d/
 mkdir -p /var/consul/
-${CONSUL_BIN} agent -pid-file=${PIDFILE} -config-file=/etc/consul.json -config-dir=/etc/consul.d ${JOIN_WAN} &
+${CONSUL_BIN} agent -pid-file=${PIDFILE} -config-file=/etc/consul.d/agent.json -config-dir=/etc/consul.d ${JOIN_WAN} &
 
 sleep 1
 
