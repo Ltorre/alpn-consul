@@ -1,5 +1,6 @@
 FROM qnib/alpn-openrc
 
+## Should remove curl and unzip after one big step
 RUN apk update && apk upgrade && \
     apk add curl unzip && \
     rm -rf /var/cache/apk/*
