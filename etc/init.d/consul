@@ -1,0 +1,13 @@
+#!/sbin/runscript
+  
+start() {
+    ebegin "Starting consul agent"
+    /opt/qnib/consul/bin/start.sh 
+    eend $?
+}
+  
+stop() {
+    ebegin "Stopping consul agent"
+    /usr/local/bin/consul leave  
+    eend $?
+}
