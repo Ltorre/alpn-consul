@@ -126,12 +126,5 @@ fi
 
 mkdir -p /etc/consul.d/
 mkdir -p /var/consul/
-${CONSUL_BIN} agent -pid-file=${PIDFILE} -config-file=/etc/consul.d/agent.json -config-dir=/etc/consul.d ${JOIN_WAN} &
+${CONSUL_BIN} agent -pid-file=${PIDFILE} -config-file=/etc/consul.d/agent.json -config-dir=/etc/consul.d ${JOIN_WAN} 1>>/var/log/consul.out 2>>/var/log/consul.err &
 
-sleep 1
-
-trap "kill -9 $(cat ${PIDFILE});rm -f ${PIDFILE}" SIGINT SIGTERM 15 9 10
-
-while [ -f ${PIDFILE} ];do
-    sleep 1
-done
