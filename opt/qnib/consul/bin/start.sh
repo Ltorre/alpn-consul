@@ -84,9 +84,9 @@ if [ ! -z "${CONSUL_CLUSTER_IPS}" ];then
               echo "Kick out '${IP}', since it does not match the CONSUL_DOMAIN_SUFFIX '${CONSUL_DOMAIN_SUFFIX}'"
               continue
           elif [ "X${CONSUL_SKIP_CURL}" == "Xtrue" ];then
-              START_JOIN+=" ${IP}"
+              START_JOIN="${START_JOIN} ${IP}"
           elif [ $(curl --connect-timeout 2 -sI ${IP}:8500/ui/|grep -c "HTTP/1.1 200 OK") -eq 1 ];then
-              START_JOIN+=" ${IP}"
+              START_JOIN="${START_JOIN} ${IP}"
           fi
        fi
     done
