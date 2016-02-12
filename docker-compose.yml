@@ -1,0 +1,23 @@
+master:
+  image: qnib/alpn-consul:openrc
+  ports:
+   - "8500:8500"
+  environment:
+   - DC_NAME=dc1
+   - CONSUL_BOOTSTRAP_EXPECT=1
+  dns: 127.0.0.1
+  hostname: master
+  container_name: master
+
+client1:
+  image: qnib/alpn-consul:openrc
+  dns: 127.0.0.1
+  hostname: client1
+  container_name: client1
+  ports:
+   - 8500
+  environment:
+   - DC_NAME=dc1
+  links:
+   - master:consul
+
