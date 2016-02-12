@@ -126,5 +126,5 @@ fi
 
 mkdir -p /etc/consul.d/
 mkdir -p /var/consul/
-${CONSUL_BIN} agent -pid-file=${PIDFILE} -config-file=/etc/consul.d/agent.json -config-dir=/etc/consul.d ${JOIN_WAN} 1>>/var/log/consul.out 2>>/var/log/consul.err &
+${CONSUL_BIN} agent -pid-file=${PIDFILE} -config-file=/etc/consul.d/agent.json -config-dir=/etc/consul.d ${JOIN_WAN}
 
