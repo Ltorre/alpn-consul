@@ -1,4 +1,4 @@
-FROM qnib/alpn-openrc
+FROM qnib/alpn-supervisor
 
 ENV CONSUL_VER=0.6.3 \
     CT_VER=0.12.1
@@ -21,13 +21,11 @@ RUN apk update && apk upgrade && \
     cd /usr/local/bin/ && \
     unzip /tmp/consul-template.zip && \
     rm -f /tmp/consul-template.zip && \
-    apk del curl unzip && \
+    apk del unzip && \
     rm -rf /var/cache/apk/*
 ADD etc/consul.d/agent.json /etc/consul.d/
-ADD etc/init.d/consul /etc/init.d/
+ADD etc/supervisord.d/consul.ini /etc/supervisord.d/
 ADD opt/qnib/consul/bin/start.sh /opt/qnib/consul/bin/
 ADD opt/qnib/consul/etc/bash_functions.sh /opt/qnib/consul/etc/
-RUN echo "consul members" >> /root/.bash_history && \
-    ln -s /etc/init.d/consul /etc/runlevels/default/
-
+RUN echo "consul members" >> /root/.bash_history
 
