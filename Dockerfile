@@ -4,7 +4,7 @@ ENV CONSUL_VER=0.6.3 \
     CT_VER=0.12.1
 ## Should remove curl and unzip after one big step
 RUN apk update && apk upgrade && \
-    apk add curl unzip && \
+    apk add bc nmap curl unzip && \
     # consul
     curl -fso /tmp/consul.zip https://releases.hashicorp.com/consul/${CONSUL_VER}/consul_${CONSUL_VER}_linux_amd64.zip && \
     cd /usr/local/bin/ && \
