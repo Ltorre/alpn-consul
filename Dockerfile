@@ -16,11 +16,11 @@ RUN apk add --update curl unzip \
  && curl -Lso /tmp/consul-template.zip https://releases.hashicorp.com/consul-template/${CT_VER}/consul-template_${CT_VER}_linux_amd64.zip \
  && cd /usr/local/bin/ \
  && unzip /tmp/consul-template.zip \
+ && curl -fsL https://github.com/qnib/consul-content/releases/download/${QNIB_CONSUL}/consul.tar |tar xf - -C /opt/qnib/ \
  && apk del curl unzip \
  && rm -f /tmp/consul-template.zip /var/cache/apk/* \
  && echo "consul members" >> /root/.bash_history
 ADD etc/consul.d/agent.json /etc/consul.d/
 ADD etc/supervisord.d/consul.ini /etc/supervisord.d/
-RUN curl -fsL https://github.com/qnib/consul-content/releases/download/${QNIB_CONSUL}/consul.tar |tar xf - -C /opt/qnib/
 
 
