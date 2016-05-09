@@ -26,14 +26,15 @@ function wait_for_node {
 
 function wait_for_srv {
     echo "Wait for service '$1' to be PASSING in consul. "
-    echo -n "Waiting for (1: consul / 2: consul API / 3: service / 4: status=passing): "
+    echo -n "Waiting for (1: consul / 2: consul API / 3: service / 4: status=${1-passing}): "
     wait_for_srv_loop $@
 }
+
 function wait_for_srv_loop {
     if [ "X${START_TIME}" == "X" ];then
         START_TIME=$(date +%s)
     fi
-    TIMEOUT=${2-999}
+    TIMEOUT=${3-300}
     if [ $(echo "$(date +%s)-${START_TIME}" |bc) -gt ${TIMEOUT} ];then
         echo "[FAIL] Timeout reached: ${TIMEOUT}"
         exit 1
@@ -42,23 +43,27 @@ function wait_for_srv_loop {
     if [ $? -ne 0 ];then
         echo -n "1"
         sleep 1
-        wait_for_srv_loop ${1} ${TIMEOUT}
+        wait_for_srv_loop $@
     fi
     curl -s localhost:8500/v1/catalog/services|jq . 1>/dev/null 2>/dev/null
     if [ $? -ne 0 ];then
         echo -n "2"
         sleep 1
-        wait_for_srv_loop ${1} ${TIMEOUT}
+        wait_for_srv_loop $@
     fi
     if [ $(curl -s localhost:8500/v1/catalog/service/${1} |jq ". | length") -eq 0 ];then
         echo -n "3"
         sleep 1
-        wait_for_srv_loop ${1} ${TIMEOUT}
+        wait_for_srv_loop $@
     fi
-    if [ $(curl -s "localhost:8500/v1/health/checks/${1}?near=_agent" |jq ".[].Status" |tr -d '"') != "passing" ];then
+    if [ "X$2" == "Xany" ] && [ $(curl -s "localhost:8500/v1/health/checks/${1}?near=_agent" |jq ".[].Status" |tr -d '"' |wc -l) -eq 0 ];then
         echo -n "4"
         sleep 1
-        wait_for_srv_loop ${1} ${TIMEOUT}
+        wait_for_srv_loop $@
+    elif [ "X$2" != "Xany" ] && [ $(curl -s "localhost:8500/v1/health/checks/${1}?near=_agent" |jq ".[].Status" |tr -d '"' |grep -c ${2-passing}) -eq 0 ];then
+        echo -n "4"
+        sleep 1
+        wait_for_srv_loop $@
     else
         echo " [OK]"
     fi
