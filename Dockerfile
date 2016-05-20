@@ -1,32 +1,35 @@
 FROM qnib/alpn-openrc
 
-ENV CONSUL_VER=0.6.3 \
-    CT_VER=0.12.1
+ENV CONSUL_VER=0.6.4 \
+    CT_VER=0.14.0 \
+    TERM=xterm \
+    QNIB_CONSUL=0.1.1
 ## Should remove curl and unzip after one big step
-RUN apk update && apk upgrade && \
-    apk add curl unzip && \
-    # consul
-    curl -fso /tmp/consul.zip https://releases.hashicorp.com/consul/${CONSUL_VER}/consul_${CONSUL_VER}_linux_amd64.zip && \
-    cd /usr/local/bin/ && \
-    unzip /tmp/consul.zip && \
-    rm -f /tmp/consul.zip && \
-    mkdir -p /opt/consul-web-ui && \
-    # consul-ui
-    curl -Lso /tmp/consul-web-ui.zip https://releases.hashicorp.com/consul/${CONSUL_VER}/consul_${CONSUL_VER}_web_ui.zip && \
-    cd /opt/consul-web-ui && \
-    unzip /tmp/consul-web-ui.zip && \
-    rm -f /tmp/consul-web-ui.zip && \
-    # consul-template
-    curl -Lso /tmp/consul-template.zip https://releases.hashicorp.com/consul-template/${CT_VER}/consul-template_${CT_VER}_linux_amd64.zip && \
-    cd /usr/local/bin/ && \
-    unzip /tmp/consul-template.zip && \
-    rm -f /tmp/consul-template.zip && \
-    apk del unzip && \
-    rm -rf /var/cache/apk/*
-ADD etc/consul.d/agent.json /etc/consul.d/
+RUN apk add --update curl unzip bc jq nmap \
+ # consul
+ && curl -fso /tmp/consul.zip https://releases.hashicorp.com/consul/${CONSUL_VER}/consul_${CONSUL_VER}_linux_amd64.zip \
+ && cd /usr/local/bin/ \
+ && unzip /tmp/consul.zip \
+ && rm -f /tmp/consul.zip \
+ && mkdir -p /opt/consul-web-ui \
+ # consul-web-ui
+ && curl -Lso /tmp/consul-web-ui.zip https://releases.hashicorp.com/consul/${CONSUL_VER}/consul_${CONSUL_VER}_web_ui.zip \
+ && cd /opt/consul-web-ui \
+ && unzip /tmp/consul-web-ui.zip \
+ && rm -f /tmp/consul-web-ui.zip \
+ # consul-template
+ && curl -Lso /tmp/consul-template.zip https://releases.hashicorp.com/consul-template/${CT_VER}/consul-template_${CT_VER}_linux_amd64.zip \
+ && cd /usr/local/bin/ \
+ && unzip /tmp/consul-template.zip \
+ && rm -f /tmp/consul-template.zip \
+ && apk del unzip \
+ && mkdir -p /opt/qnib/ \
+ && curl -fsL https://github.com/qnib/consul-content/releases/download/${QNIB_CONSUL}/consul.tar |tar xf - -C /opt/qnib/ \
+ && rm -rf /var/cache/apk/*
+ADD etc/consul.d/agent.json \
+    etc/consul.d/consul.json \
+    /etc/consul.d/
 ADD etc/init.d/consul /etc/init.d/
-ADD opt/qnib/consul/bin/start.sh /opt/qnib/consul/bin/
-ADD opt/qnib/consul/etc/bash_functions.sh /opt/qnib/consul/etc/
-RUN echo "consul members" >> /root/.bash_history && \
-    ln -s /etc/init.d/consul /etc/runlevels/default/
+RUN echo "consul members" >> /root/.bash_history \
+ && ln -s /etc/init.d/consul /etc/runlevels/default/ \
 

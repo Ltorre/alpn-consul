@@ -5,6 +5,7 @@ master:
   environment:
    - DC_NAME=dc1
    - CONSUL_BOOTSTRAP_EXPECT=1
+   - RUN_SERVER=true
   dns: 127.0.0.1
   hostname: master
   container_name: master
