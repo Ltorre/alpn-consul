@@ -1,9 +1,9 @@
 FROM qnib/alpn-supervisor
 
 ENV CONSUL_VER=0.6.4 \
-    CT_VER=0.14.0 \
+    CT_VER=0.15.0 \
     TERM=xterm \
-    QNIB_CONSUL=0.1.2
+    QNIB_CONSUL=0.1.3.2
 RUN apk add --update curl unzip jq bc nmap \
  && curl -fso /tmp/consul.zip https://releases.hashicorp.com/consul/${CONSUL_VER}/consul_${CONSUL_VER}_linux_amd64.zip \
  && cd /usr/local/bin/ \
@@ -25,4 +25,4 @@ ADD etc/consul.d/agent.json \
     etc/consul.d/consul.json \
     /etc/consul.d/
 ADD etc/supervisord.d/consul.ini /etc/supervisord.d/
-
+HEALTHCHECK --interval=15s --timeout=5s CMD /opt/qnib/consul/bin/check.sh
