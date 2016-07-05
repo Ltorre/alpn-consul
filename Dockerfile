@@ -1,4 +1,4 @@
-FROM qnib/alpn-supervisor
+FROM qnib/alpn-supervisor:3.2
 
 ENV CONSUL_VER=0.6.4 \
     CT_VER=0.14.0 \
