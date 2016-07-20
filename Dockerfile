@@ -4,6 +4,7 @@ ENV CONSUL_VER=0.6.4 \
     CT_VER=0.15.0 \
     TERM=xterm \
     QNIB_CONSUL=0.1.2
+EXPOSE 8500 8301 8300 8400
 RUN apk add --update curl unzip jq bc nmap ca-certificates openssl \
  && curl -fso /tmp/consul.zip https://releases.hashicorp.com/consul/${CONSUL_VER}/consul_${CONSUL_VER}_linux_amd64.zip \
  && cd /usr/local/bin/ \
