@@ -20,9 +20,11 @@ RUN apk add --update curl unzip jq bc nmap ca-certificates openssl \
  && unzip /tmp/consul-template.zip \
  && mkdir -p /opt/qnib/ \
  && curl -fsL https://github.com/qnib/consul-content/releases/download/${QNIB_CONSUL}/consul.tar |tar xf - -C /opt/qnib/ \
- && wget -qO /usr/local/bin/go-github https://github.com/qnib/go-github/releases/download/0.2.2/go-github_0.2.2_Linux \
+ && wget -qO /usr/local/bin/go-github https://github.com/qnib/go-github/releases/download/0.2.2/go-github_0.2.2_MuslLinux \
  && chmod +x /usr/local/bin/go-github \
  && wget -qO - $(/usr/local/bin/go-github rLatestUrl --ghorg qnib --ghrepo consul-cli --regex ".*alpine" --limit 1) |tar xfz - -C /tmp/ \
+ && wget -qO /usr/local/bin/go-getmyname $(/usr/local/bin/go-github rLatestUrl --ghorg qnib --ghrepo go-getmyname --regex ".*alpine" --limit 1) \
+ && chmod +x /usr/local/bin/go-getmyname \
  && apk del openssl \
  && mv /tmp/consul-cli_*_alpine/consul-cli /usr/local/bin/ && \
     rm -rf /var/cache/apk/* /tmp/* /usr/local/bin/go-github \
