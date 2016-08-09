@@ -2,8 +2,7 @@ FROM qnib/alpn-supervisor
 
 ENV CONSUL_VER=0.6.4 \
     CT_VER=0.15.0 \
-    TERM=xterm \
-    QNIB_CONSUL=0.1.3.4
+    TERM=xterm 
 EXPOSE 8500 8301 8300 8400
 RUN apk add --update curl unzip jq bc nmap ca-certificates openssl \
  && curl -fso /tmp/consul.zip https://releases.hashicorp.com/consul/${CONSUL_VER}/consul_${CONSUL_VER}_linux_amd64.zip \
@@ -19,9 +18,9 @@ RUN apk add --update curl unzip jq bc nmap ca-certificates openssl \
  && cd /usr/local/bin/ \
  && unzip /tmp/consul-template.zip \
  && mkdir -p /opt/qnib/ \
- && curl -fsL https://github.com/qnib/consul-content/releases/download/${QNIB_CONSUL}/consul.tar |tar xf - -C /opt/qnib/ \
  && wget -qO /usr/local/bin/go-github https://github.com/qnib/go-github/releases/download/0.2.2/go-github_0.2.2_MuslLinux \
  && chmod +x /usr/local/bin/go-github \
+ && curl -fsL $(/usr/local/bin/go-github rLatestUrl --ghorg qnib --ghrepo consul-content --regex ".*\.tar" --limit 1) |tar xf - -C /opt/qnib/ \
  && wget -qO - $(/usr/local/bin/go-github rLatestUrl --ghorg qnib --ghrepo consul-cli --regex ".*alpine" --limit 1) |tar xfz - -C /tmp/ \
  && wget -qO /usr/local/bin/go-getmyname $(/usr/local/bin/go-github rLatestUrl --ghorg qnib --ghrepo go-getmyname --regex ".*alpine" --limit 1) \
  && chmod +x /usr/local/bin/go-getmyname \
