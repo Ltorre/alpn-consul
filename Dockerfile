@@ -26,3 +26,6 @@ RUN apk add --update curl unzip nmap bc jq curl ca-certificates openssl \
  && echo "consul members" >> /root/.bash_history
 ADD etc/consul.d/agent.json /etc/consul.d/
 ADD etc/supervisord.d/consul.ini /etc/supervisord.d/
+HEALTHCHECK --interval=2s --retries=30 --timeout=1s \
+  CMD /opt/qnib/consul/bin/healthcheck.sh
+ADD opt/qnib/consul/bin/healthcheck.sh /opt/qnib/consul/bin/
