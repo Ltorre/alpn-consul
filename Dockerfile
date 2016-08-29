@@ -25,5 +25,7 @@ RUN apk add --update curl unzip nmap bc jq curl ca-certificates openssl \
  && chmod +x /usr/local/bin/go-getmyname \
  && rm -f /tmp/consul-template.zip /var/cache/apk/* \
  && echo "consul members" >> /root/.bash_history
-ADD etc/consul.d/agent.json /etc/consul.d/
+ADD etc/consul.d/agent.json \
+    etc/consul.d/consul.json \
+    /etc/consul.d/
 ADD etc/supervisord.d/consul.ini /etc/supervisord.d/
