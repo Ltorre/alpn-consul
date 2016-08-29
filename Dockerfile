@@ -24,6 +24,8 @@ RUN apk add --update curl unzip nmap bc jq curl ca-certificates openssl \
  && wget -qO /usr/local/bin/go-getmyname $(/usr/local/bin/go-github rLatestUrl --ghorg qnib --ghrepo go-getmyname --regex ".*alpine" --limit 1) \
  && chmod +x /usr/local/bin/go-getmyname \
  && rm -f /tmp/consul-template.zip /var/cache/apk/* \
+ && wget -qO - $(/usr/local/bin/go-github rLatestUrl --ghorg qnib --ghrepo consul-cli --regex ".*alpine" --limit 1) |tar xfz - -C /tmp/ \
+ && mv /tmp/consul-cli_*_alpine/consul-cli /usr/local/bin/ \
  && echo "consul members" >> /root/.bash_history
 ADD etc/consul.d/agent.json \
     etc/consul.d/consul.json \
