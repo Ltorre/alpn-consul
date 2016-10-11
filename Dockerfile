@@ -1,9 +1,9 @@
 FROM qnib/alpn-supervisor
 
-ENV CONSUL_VER=0.6.4 \
-    CT_VER=0.15.0 \
+ENV CONSUL_VER=0.7.0 \
+    CT_VER=0.16.0 \
     DOCKER_HOST=tcp://172.17.0.1:2376
-RUN apk add --update curl unzip nmap bc jq curl ca-certificates openssl \
+RUN apk add --no-cache curl unzip nmap bc jq curl ca-certificates openssl \
  && curl -fso /tmp/consul.zip https://releases.hashicorp.com/consul/${CONSUL_VER}/consul_${CONSUL_VER}_linux_amd64.zip \
  && cd /usr/local/bin/ \
  && unzip /tmp/consul.zip \
@@ -23,7 +23,7 @@ RUN apk add --update curl unzip nmap bc jq curl ca-certificates openssl \
  && apk del unzip \
  && wget -qO /usr/local/bin/go-getmyname $(/usr/local/bin/go-github rLatestUrl --ghorg qnib --ghrepo go-getmyname --regex ".*alpine" --limit 1) \
  && chmod +x /usr/local/bin/go-getmyname \
- && rm -f /tmp/consul-template.zip /var/cache/apk/* \
+ && rm -f /tmp/consul-template.zip \
  && wget -qO - $(/usr/local/bin/go-github rLatestUrl --ghorg qnib --ghrepo consul-cli --regex ".*alpine" --limit 1) |tar xfz - -C /tmp/ \
  && mv /tmp/consul-cli_*_alpine/consul-cli /usr/local/bin/ \
  && echo "consul members" >> /root/.bash_history
