@@ -1,6 +1,6 @@
 FROM qnib/alpn-supervisor
 
-ENV CONSUL_VER=0.7.0 \
+ENV CONSUL_VER=0.7.1 \
     CT_VER=0.16.0 \
     DOCKER_HOST=tcp://172.17.0.1:2376
 RUN apk add --no-cache curl unzip nmap bc jq curl ca-certificates openssl \
