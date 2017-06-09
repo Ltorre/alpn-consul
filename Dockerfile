@@ -9,6 +9,7 @@ RUN apk add --no-cache curl unzip nmap bc jq curl ca-certificates openssl \
  && mkdir -p /opt/qnib/consul/bin/ \
  && cd /opt/qnib/consul/bin/ \
  && unzip /tmp/consul.zip \
+ && ln -s /opt/qnib/consul/bin/consul /usr/local/bin/ \
  && rm -f /tmp/consul.zip \
  && mkdir -p /opt/consul-web-ui \
  && curl -Lso /tmp/consul-web-ui.zip https://releases.hashicorp.com/consul/${CONSUL_VER}/consul_${CONSUL_VER}_web_ui.zip \
